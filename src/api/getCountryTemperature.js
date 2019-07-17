@@ -11,7 +11,7 @@ const pathToURL = url => isBrowser() ? getBrowserUrl(url) : `${TEST_URL}${url}`;
 module.exports.getCountryTemperature = (lat, lng) => {
   var misCabeceras = new Headers();
   const url = pathToURL('/countries/weather/temperature')
-  console.log('pathtoUrl')
+  console.log('pathtoUrl', url)
   var miInit = {
     method: 'GET',
     headers: misCabeceras,
