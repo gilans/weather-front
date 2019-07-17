@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Map, GoogleApiWrapper } from 'google-maps-react';
-const { getCountryTemperature } = require('./../api/getCountryTemperature')
+import { getCountryTemperature } from './../api/getCountryTemperature';
 const mapStyles = {
   width: '100%',
   height: '100%',

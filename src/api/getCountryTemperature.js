@@ -10,7 +10,8 @@ const pathToURL = url => isBrowser() ? getBrowserUrl(url) : `${TEST_URL}${url}`;
 
 module.exports.getCountryTemperature = (lat, lng) => {
   var misCabeceras = new Headers();
-  console.log('pathtoUrl', pathToURL('/country'))
+  const url = pathToURL('/countries/weather/temperature')
+  console.log('pathtoUrl')
   var miInit = {
     method: 'GET',
     headers: misCabeceras,
@@ -18,11 +19,7 @@ module.exports.getCountryTemperature = (lat, lng) => {
     cache: 'default'
   };
 
-
-  console.log('PORT:', miInit, process.env.PORT);
-  return process.env.PORT
-  /* fetch(
-    `http:///countries/weather/temperature?lat=${lat}&lng=${lng}`,
+  fetch(`${url}?lat=${lat}&lng=${lng}`,
     miInit
   )
     .then(function (response) {
@@ -31,7 +28,7 @@ module.exports.getCountryTemperature = (lat, lng) => {
     .then(function (myJson) {
       console.log(myJson);
     });
- */
+
   /* var marker = new google.maps.Marker({
     position: latlng,
     map: map
