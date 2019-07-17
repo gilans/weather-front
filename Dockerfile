@@ -1,16 +1,18 @@
-# base image
-FROM node:12.2.0-alpine
+FROM node:latest
 
-# set working directory
-WORKDIR /app
+# this makes the build fail in travis ! see https://github.com/nodejs/docker-node/issues/661
+# RUN npm install --global yarn
+WORKDIR /usr/src/app
 
-# add `/app/node_modules/.bin` to $PATH
-ENV PATH /app/node_modules/.bin:$PATH
+COPY package*.json /usr/src/app/
 
-# install and cache app dependencies
-COPY package.json /app/package.json
-RUN npm install --silent
-RUN npm install react-scripts@3.0.1 -g --silent
+RUN npm install
 
-# start app
-CMD ["npm", "start"]
+ADD src /usr/src/app/src
+ADD public /usr/src/app/public
+
+RUN npm run build
+
+ENV NODE_ENV=production
+
+CMD ["npm","start"]
