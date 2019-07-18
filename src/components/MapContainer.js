@@ -1,55 +1,61 @@
 import React, { Component } from 'react'
-import { Map, GoogleApiWrapper } from 'google-maps-react';
-import { getCountryTemperature } from './../api/getCountryTemperature';
-const mapStyles = {
-  width: '100%',
-  height: '100%',
-};
+import ModalRoot from './../ModalRoot';
 
+import CustomMap from './CustomMap';
+import { showModal, hideModal } from './../actions/modal'
+import { connect } from 'react-redux';
+
+const mapDispatchToProps = dispatch => ({
+  hideModal: () => dispatch(hideModal()),
+  showModal: (modalProps, modalType) => {
+    dispatch(showModal({ modalProps, modalType }))
+  }
+})
 class MapContainer extends Component {
-  constructor() {
-    super()
+  constructor(props) {
+    super(props)
     this.state = {
-      textinput: ""
+      dataStatus: false
     }
-    this.handleSubmit = this.handleSubmit.bind(this)
-    this.handleInput = this.handleInput.bind(this)
+    this.closeModal = this.closeModal.bind(this);
+    this.handleShowModal = this.handleShowModal.bind(this)
   }
 
-  handleInput(e) {
-    const { value, name } = e.target
-    this.setState({
-      [name]: value
-    })
+  closeModal(event) {
+    this.props.hideModal();
   }
-  handleSubmit(e) {
-    e.preventDefault()
-    this.props.onAddTodo(this.state.textinput)
+
+  handleShowModal(resp) {
+    console.log('show modal', resp)
+    if (resp.error) {
+      this.props.showModal({
+        open: true,
+        title: `Direccion no existe!`,
+        message: `En esta localidad no existe una ciudad, pais`,
+        closeModal: this.closeModal
+      }, 'alert')
+    } else {
+
+      this.props.showModal({
+        open: true,
+        title: `${resp.addressCountry}`,
+        message: `Temperatura= ${resp.temperature} °,  Estación= ${resp.weatherSeason}`,
+        closeModal: this.closeModal
+      }, 'alert')
+    }
   }
-  async onClick(t, map, coord) {
-    const { latLng } = coord;
-    const lat = latLng.lat();
-    const lng = latLng.lng();
-    await getCountryTemperature(lat, lng)
-    console.log('onClick', lat, lng);
-  }
+
   render() {
-    const center = { lat: -33.4724727, lng: -70.9100297 };
     return (
-      <Map
+      <div>
+        <div>
+          <CustomMap onShowModal={this.handleShowModal} />
 
-        google={this.props.google}
-        zoom={5}
-        zoomControl={false}
-        scrollwheel={false}
-        disableDoubleClickZoom={true}
-        style={mapStyles}
-        initialCenter={center}
-        onClick={this.onClick}
-      />
+        </div>
+        <ModalRoot />
+      </div>
     )
   }
 }
-export default GoogleApiWrapper({
-  apiKey: 'AIzaSyA0sXJRtja7wsPZxVlujp8B6LiYloMnQns'
-})(MapContainer);
+
+export default connect(null, mapDispatchToProps)(MapContainer);
