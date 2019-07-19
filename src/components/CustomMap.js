@@ -3,6 +3,8 @@ import React, { Component } from 'react'
 import { Map, GoogleApiWrapper } from 'google-maps-react';
 import { getCountryTemperature } from './../api/getCountryTemperature';
 
+import Loading from './Modals/Loading';
+
 const mapStyles = {
   width: '100%',
   height: '100%',
@@ -11,6 +13,9 @@ const mapStyles = {
 class CustomMap extends Component {
   constructor(props) {
     super(props)
+    this.state = {
+      showSpinner: false
+    }
     this.showModal = this.showModal.bind(this);
   }
 
@@ -18,9 +23,10 @@ class CustomMap extends Component {
     const { latLng } = coord;
     const lat = latLng.lat();
     const lng = latLng.lng();
+    this.setState({ showSpinner: true })
     let resp = await getCountryTemperature(lat, lng)
+    this.setState({ showSpinner: false })
     this.props.onShowModal(resp)
-
   }
 
   render() {
@@ -42,7 +48,12 @@ class CustomMap extends Component {
         >
 
         </Map>
+        <div>
+
+          {this.state.showSpinner && <Loading />}
+        </div>
       </div>
+
     )
   }
 }

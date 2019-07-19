@@ -10,7 +10,6 @@ module.exports.getCountryTemperature = (lat, lng) => {
   var misCabeceras = new Headers();
   const url = pathToURL('/countries/weather/temperature')
 
-
   console.log('pathtoUrl', url)
   var miInit = {
     method: 'GET',

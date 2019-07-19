@@ -15,7 +15,7 @@ const AlertModal = ({ closeModal, title, message }) => {
         <p>{message}</p>
       </div>
       <div className="modal-footer">
-        <button type="button" className="btn btn-secondary" onClick={closeModal}>Close</button>
+        <button type="button" className="btn btn-secondary" onClick={closeModal}>Cerrar</button>
       </div>
     </div>
   )
